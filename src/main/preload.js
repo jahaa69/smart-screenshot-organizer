@@ -1,11 +1,11 @@
+// Expose IPC API to renderer
 const { contextBridge, ipcRenderer } = require('electron')
 
-// Expose IPC API to renderer
 contextBridge.exposeInMainWorld('electronAPI', {
   getFiles: () => ipcRenderer.invoke('get-files'),
-  moveFile: (fileName) => ipcRenderer.invoke('move-file', fileName),
+  moveFile: (file) => ipcRenderer.invoke('move-file', file),
   setAutoOrganize: (value) => ipcRenderer.invoke('set-auto-organize', value),
-  getStats: () => ipcRenderer.invoke('get-stats'),
+  getStats: () => ipcRenderer.invoke('get-stats'), // Vérifie que cette ligne est bien complète
   startWatcher: () => ipcRenderer.invoke('start-watcher'),
   onStatsUpdated: (callback) => ipcRenderer.on('stats-updated', (event, stats) => callback(stats))
 })

@@ -12,15 +12,18 @@ function createWindow () {
   })
 
   win.loadFile('src/renderer/views/main.html')
+  return win
 }
 
+let mainWindow;
+
 app.whenReady().then(() => {
-  setupIPCHandlers()
-  createWindow()
+  mainWindow = createWindow()
+  setupIPCHandlers(mainWindow)
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+      mainWindow = createWindow()
     }
   })
 })

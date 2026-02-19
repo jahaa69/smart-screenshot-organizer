@@ -1,24 +1,33 @@
-const newPath = `${process.env.HOME || process.env.USERPROFILE}/Pictures/ScreenshotsOrganized`
-const oldPath = `${process.env.HOME || process.env.USERPROFILE}/Pictures/Screenshots`
-const fs = require('fs')
-const path = require('path')
+const fs = require('fs/promises');
+const path = require('path'); // Indispensable pour manipuler les chemins
+const os = require('os');
 
-function mooveFile(file) {
-    const oldFilePath = path.join(oldPath, file)
-    const newFilePath = path.join(newPath, file)
-    if (!fs.existsSync(newPath)) {
-        fs.mkdirSync(newPath)
-    }
-    fs.rename(oldFilePath, newFilePath, (err) => {
-        if (err) {
-            console.error('Error moving file:', err)
-        } else {
-            console.log(`File ${file} moved to ${newPath}`)
-        }
-    })
+// Dossier source et destination
+const SOURCE_DIR = path.join(os.homedir(), 'Pictures', 'Screenshots');
+const TARGET_DIR = path.join(SOURCE_DIR, 'Organize');
+
+async function moveFile(fileName) {
+  if (!fileName) {
+    throw new Error('Aucun nom de fichier fourni');
+  }
+
+  // Construction des chemins complets
+  const oldFilePath = path.join(SOURCE_DIR, fileName);
+  const newFilePath = path.join(TARGET_DIR, fileName);
+
+  try {
+    // dossier destination existe
+    await fs.mkdir(TARGET_DIR, { recursive: true });
+
+    // Déplacer le fichier
+    await fs.rename(oldFilePath, newFilePath);
+    
+    console.log(`Succes : ${fileName} deplace vers /Organize`);
+    return newFilePath;
+  } catch (error) {
+    console.error(`Erreur lors du deplacement de ${fileName}:`, error.message);
+    throw error;
+  }
 }
 
-
-module.exports = {
-    mooveFile
-}
+module.exports = { moveFile };
