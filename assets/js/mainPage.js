@@ -40,8 +40,24 @@
             console.error('Error getting files:', e)
         }
     }
-    testButton.addEventListener('click', getFiles)
+    
 
+    // ── moove files ───────────────────────────────
+
+    async function organizeFiles() {
+        try {
+
+          const filesPath= await window.electronAPI.mooveFile()
+            console.log('Files organized', filesPath)
+        } catch(e) {
+            console.error('Error organizing files:', e)
+        }
+    }
+
+    testButton.addEventListener('click', () => {
+        getFiles()
+        organizeFiles()
+    })
     // ── Boot ───────────────────────────────────────────────
     async function init() {
       try {

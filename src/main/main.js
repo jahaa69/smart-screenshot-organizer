@@ -1,6 +1,6 @@
 const { app, BrowserWindow } = require('electron/main')
 const path = require('node:path')
-const { setupIPCHandlers } = require('./IPCHandler.ts')
+const { setupIPCHandlers } = require('./IPCHandler.js')
 
 function createWindow () {
   const win = new BrowserWindow({

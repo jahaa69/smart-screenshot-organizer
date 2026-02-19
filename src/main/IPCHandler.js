@@ -1,11 +1,20 @@
 const { ipcMain } = require('electron')
-const { getFiles } = require('./ScreenshotWatcher.js')
+const { getFiles } = require('./ScreenshotWatcher')
+const { mooveFile } = require('./FileService.js')
 
 function setupIPCHandlers() {
   // Handle get files request
   ipcMain.handle('get-files', async () => {
     return new Promise((resolve, reject) => {
       getFiles().then(files => resolve(files)).catch(err => reject(err))
+    })
+  })
+
+  // Handle move file request
+  ipcMain.handle('move-file', async (event, fileName) => {
+    return new Promise((resolve, reject) => {
+      mooveFile(fileName)
+      resolve(true)
     })
   })
 
