@@ -7,6 +7,8 @@
     "doc": "doc"
   },
   "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,5 +24,8 @@
   "homepage": "https://github.com/jahaa69/smart-screenshot-organizer#readme",
   "devDependencies": {
     "electron": "^40.4.1"
+  },
+  "dependencies": {
+    "chokidar": "^5.0.0"
   }
 }

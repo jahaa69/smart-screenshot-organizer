@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require('electron/main')
 const path = require('node:path')
+const { setupIPCHandlers } = require('./IPCHandler.ts')
 
 function createWindow () {
   const win = new BrowserWindow({
@@ -14,6 +15,7 @@ function createWindow () {
 }
 
 app.whenReady().then(() => {
+  setupIPCHandlers()
   createWindow()
 
   app.on('activate', () => {

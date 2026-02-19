@@ -1,5 +1,4 @@
     // ── Import ──────────────────────────────────────────────
-
     const autoOrganizeToggle = document.getElementById('toggle-auto')
     const testButton = document.getElementById('test')
 
@@ -34,10 +33,11 @@
     // ── Get files ───────────────────────────────
 
     async function getFiles() {
-        const watcher = new ScrenshotWatcher()
-        const files = await watcher.getFiles()
-        if (autoOrganize) {
+        try {
+            const files = await window.electronAPI.getFiles()
             console.log('Files in directory:', files)
+        } catch(e) {
+            console.error('Error getting files:', e)
         }
     }
     testButton.addEventListener('click', getFiles)

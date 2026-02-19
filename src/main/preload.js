@@ -1,3 +1,14 @@
+const { contextBridge, ipcRenderer } = require('electron')
+
+// Expose IPC API to renderer
+contextBridge.exposeInMainWorld('electronAPI', {
+  getFiles: () => ipcRenderer.invoke('get-files'),
+  setAutoOrganize: (value) => ipcRenderer.invoke('set-auto-organize', value),
+  getStats: () => ipcRenderer.invoke('get-stats'),
+  startWatcher: () => ipcRenderer.invoke('start-watcher'),
+  onStatsUpdated: (callback) => ipcRenderer.on('stats-updated', (event, stats) => callback(stats))
+})
+
 window.addEventListener('DOMContentLoaded', () => {
   const replaceText = (selector, text) => {
     const element = document.getElementById(selector)
