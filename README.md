@@ -7,6 +7,9 @@ Organize your screenshots with intelligence and elegance!
 
 DashBoard : 
 <img width="1907" height="977" alt="image" src="https://github.com/user-attachments/assets/e91719d3-3211-4096-bfa2-16cb9f01c806" />
+
+<img width="1907" height="998" alt="image" src="https://github.com/user-attachments/assets/4612afac-6a1c-4d7b-8c61-c7ba73003f07" />
+ 
 Double clic on a file :
 <img width="755" height="631" alt="image" src="https://github.com/user-attachments/assets/d4fba2cc-1c8b-4b62-b1b2-673f6ca7d9c8" />
 <img width="1585" height="153" alt="image" src="https://github.com/user-attachments/assets/c5d4a470-add8-4df0-a709-d3c4216991af" />
