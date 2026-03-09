@@ -1,4 +1,4 @@
-// ── Demo data (remplacé par vrais fichiers via electronAPI) ──────────────
+// ── Données de démo (fallback si Electron / IPC indisponible) ─────────────
 const DEMO_FILES = [
   { name: 'ScreenShot_2024-04-28_Chrome.png',   category: 'Chrome',   dateTaken: '2024-04-28 14:05', modified: '2024-04-28 14:05', size: 842400,  tags: ['Work', 'Important'] },
   { name: 'ScreenShot_2024-04-27_Chrome.png',   category: 'Chrome',   dateTaken: '2024-04-27 09:32', modified: '2024-04-27 09:33', size: 1240000, tags: ['Work'] },
