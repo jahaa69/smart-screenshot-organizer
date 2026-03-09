@@ -59,6 +59,7 @@ async function listOrganizedFiles() {
         modified: iso,
         size: stat.size,
         tags: [],
+        filePath: fullPath,
       });
     }
 
