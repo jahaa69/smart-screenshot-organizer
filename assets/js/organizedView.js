@@ -342,32 +342,39 @@ modalTagInput.addEventListener('keydown', (e) => {
 });
 
 // ── Context menu ──────────────────────────────────────────────────────────
+
+let contextMenuFile = null;
+
 function showContextMenu(e) {
   e.preventDefault();
   removeContextMenu();
 
+  // Récupérer le fichier associé au clic droit
+  const row = e.target.closest('.file-row');
+  if (!row) return;
+  
+  const index = row.dataset.index;
+  const filteredFiles = getFiltered();
+  contextMenuFile = filteredFiles[index];
+
   const menu = document.createElement('div');
   menu.className = 'ctx-menu';
   menu.innerHTML = `
-    <div class="ctx-menu__item">
+    <div class="ctx-menu__item" onclick="contextOpenFile()">
       <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg>
       Open
     </div>
-    <div class="ctx-menu__item">
-      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z"/><path d="M3 5a2 2 0 012-2 3 3 0 003 3h4a3 3 0 003-3 2 2 0 012 2v6h-4.586l1.293-1.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L10.414 13H15v3a2 2 0 01-2 2H5a2 2 0 01-2-2V5zM15 11h2a1 1 0 110 2h-2v-2z"/></svg>
-      Move to…
-    </div>
-    <div class="ctx-menu__item">
+    <div class="ctx-menu__item" onclick="contextCopyPath()">
       <svg viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z"/><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h8a2 2 0 00-2-2H5z"/></svg>
       Copy path
     </div>
     <div class="ctx-menu__sep"></div>
-    <div class="ctx-menu__item">
+    <div class="ctx-menu__item" onclick="contextEdit()">
       <svg viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 010 2.828L7 15.828 3 17l1.172-4L14.586 2.586a2 2 0 012.828 0z"/></svg>
-      Rename
+      Edit
     </div>
     <div class="ctx-menu__sep"></div>
-    <div class="ctx-menu__item ctx-menu__item--danger">
+    <div class="ctx-menu__item ctx-menu__item--danger" onclick="contextDelete()">
       <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
       Delete
     </div>
@@ -387,6 +394,112 @@ function showContextMenu(e) {
 
 function removeContextMenu() {
   document.querySelectorAll('.ctx-menu').forEach(m => m.remove());
+  contextMenuFile = null;
+}
+
+// Actions du menu contextuel
+function contextOpenFile() {
+  if (!contextMenuFile || !contextMenuFile.filePath) {
+    alert('Could not open file: path not found');
+    return;
+  }
+  
+  // Utiliser l'API Electron pour ouvrir le fichier
+  if (window.electronAPI && window.electronAPI.openFile) {
+    window.electronAPI.openFile(contextMenuFile.filePath);
+  } else {
+    alert('Could not open file: Electron API not available');
+  }
+  removeContextMenu();
+}
+
+function contextCopyPath() {
+  if (!contextMenuFile || !contextMenuFile.filePath) {
+    alert('Could not copy path: path not found');
+    return;
+  }
+  
+  // Copier le chemin dans le presse-papiers
+  navigator.clipboard.writeText(contextMenuFile.filePath).then(() => {
+    // Afficher une notification visuelle
+    showNotification('Path copied to clipboard');
+  }).catch(err => {
+    console.error('Failed to copy path:', err);
+    alert('Failed to copy path');
+  });
+  removeContextMenu();
+}
+
+function contextEdit() {
+  if (!contextMenuFile) {
+    alert('Could not edit file: file data not found');
+    return;
+  }
+  
+  // Ouvrir le modal d'édition
+  openFileModal(contextMenuFile);
+  removeContextMenu();
+}
+
+async function contextDelete() {
+  if (!contextMenuFile || !contextMenuFile.filePath) {
+    alert('Could not delete file: path not found');
+    return;
+  }
+  
+  if (!confirm(`Are you sure you want to delete "${contextMenuFile.name}"?`)) {
+    removeContextMenu();
+    return;
+  }
+  
+  try {
+    // Appeler l'API Electron pour supprimer le fichier
+    if (window.electronAPI && window.electronAPI.deleteFile) {
+      const result = await window.electronAPI.deleteFile(contextMenuFile.filePath);
+      
+      // Recharger les fichiers
+      try {
+        allFiles = await window.electronAPI.getOrganizedFiles();
+      } catch (e) {
+        console.warn('Could not reload from backend:', e);
+        allFiles = DEMO_FILES;
+      }
+      
+      render();
+      showNotification('File deleted successfully');
+    } else {
+      alert('Delete not available: API not found');
+    }
+  } catch (err) {
+    console.error('Error deleting file:', err);
+    alert('Failed to delete file: ' + err.message);
+  }
+  removeContextMenu();
+}
+
+function showNotification(message) {
+  // Afficher une notification temporaire
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    z-index: 9999;
+    animation: slideInUp 0.3s ease;
+  `;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.style.animation = 'slideOutDown 0.3s ease';
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
 }
 
 // ── Event listeners ───────────────────────────────────────────────────────

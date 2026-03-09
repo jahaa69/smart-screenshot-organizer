@@ -1,4 +1,5 @@
-const { ipcMain, Notification } = require("electron");
+const { ipcMain, Notification, shell } = require("electron");
+const fs = require('fs/promises');
 const { getFiles } = require("./ScreenshotWatcher");
 const { moveFile, listOrganizedFiles, renameFile, updateFileTags } = require("./FileService.js");
 const { getStats } = require("./StatFile.js");
@@ -133,6 +134,44 @@ function setupIPCHandlers(win) {
       return { success: true, message: 'File updated successfully' };
     } catch (err) {
       console.error('Error updating file:', err);
+      throw err;
+    }
+  });
+
+  ipcMain.handle("open-file", async (event, filePath) => {
+    try {
+      if (!filePath) {
+        throw new Error('File path is required');
+      }
+      
+      // Utiliser shell.openPath pour ouvrir le fichier avec l'application par défaut
+      const result = await shell.openPath(filePath);
+      
+      if (result) {
+        console.warn(`Failed to open file: ${result}`);
+        throw new Error(result);
+      }
+      
+      return { success: true, message: 'File opened successfully' };
+    } catch (err) {
+      console.error('Error opening file:', err);
+      throw err;
+    }
+  });
+
+  ipcMain.handle("delete-file", async (event, filePath) => {
+    try {
+      if (!filePath) {
+        throw new Error('File path is required');
+      }
+      
+      // Supprimer le fichier
+      await fs.unlink(filePath);
+      
+      console.log(`File deleted: ${filePath}`);
+      return { success: true, message: 'File deleted successfully' };
+    } catch (err) {
+      console.error('Error deleting file:', err);
       throw err;
     }
   });

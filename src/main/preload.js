@@ -9,6 +9,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getStats: () => ipcRenderer.invoke('get-stats'),
   startWatcher: () => ipcRenderer.invoke('start-watcher'),
   updateFile: (data) => ipcRenderer.invoke('update-file', data),
+  openFile: (filePath) => ipcRenderer.invoke('open-file', filePath),
+  deleteFile: (filePath) => ipcRenderer.invoke('delete-file', filePath),
   onStatsUpdated: (callback) => ipcRenderer.on('stats-updated', (event, stats) => callback(stats)),
   onFileOrganized: (callback) => ipcRenderer.on('file-organized', (event, data) => callback(data))
 })
