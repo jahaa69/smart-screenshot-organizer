@@ -5,7 +5,17 @@ Organize your screenshots with intelligence and elegance!
 ![Version Badge](https://img.shields.io/badge/version-1.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-#ADD SCREENSHOTS
+DashBoard : 
+<img width="1907" height="977" alt="image" src="https://github.com/user-attachments/assets/e91719d3-3211-4096-bfa2-16cb9f01c806" />
+Double clic on a file :
+<img width="755" height="631" alt="image" src="https://github.com/user-attachments/assets/d4fba2cc-1c8b-4b62-b1b2-673f6ca7d9c8" />
+<img width="1585" height="153" alt="image" src="https://github.com/user-attachments/assets/c5d4a470-add8-4df0-a709-d3c4216991af" />
+Right clic on a file : 
+<img width="413" height="277" alt="image" src="https://github.com/user-attachments/assets/aa331559-f6b7-4d4d-9b91-3c6baccdc395" />
+<img width="540" height="691" alt="image" src="https://github.com/user-attachments/assets/50f51b20-3fb4-4614-9567-fe8fd42b67a6" />
+<img width="407" height="110" alt="image" src="https://github.com/user-attachments/assets/1c8b1f15-be3c-42ee-ae7c-237952cfdbfe" />
+<img width="1188" height="806" alt="image" src="https://github.com/user-attachments/assets/27ba65ff-ca6a-486e-98a7-799298106609" />
+
 
 ---
 
