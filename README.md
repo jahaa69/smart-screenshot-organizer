@@ -1,106 +1,104 @@
 # Smart Screenshot Organizer
 
-Organise tes captures d’écran avec intelligence et élégance !
+Organize your screenshots with intelligence and elegance!
 
-[Badge Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version Badge](https://img.shields.io/badge/version-1.0.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-[License](https://img.shields.io/badge/license-MIT-green)
-
-
-#RajoutER DES SCREESHOTS
+#ADD SCREENSHOTS
 
 ---
 
-## Présentation du Projet
+## Project Overview
 
-### Contexte
+### Context
 
-La gestion des captures d’écran peut rapidement devenir chaotique pour tout utilisateur travaillant sur plusieurs projets ou navigations. Une organisation manuelle est lente et source d’erreurs.
+Managing screenshots can quickly become chaotic for anyone working on multiple projects or browsing sessions. Manual organization is slow and prone to errors.
 
-### Problématique
+### Problem
 
-Comment automatiser le tri et la classification des captures d’écran tout en offrant un suivi clair et des tags personnalisés ?
+How can we automate the sorting and classification of screenshots while still providing clear tracking and customizable tags?
 
-### Solution proposée
+### Proposed Solution
 
-*Smart Screenshot Organizer* surveille un dossier choisi, renomme chaque capture, organise par date et application, et permet d’ajouter des tags. L’utilisateur conserve un contrôle total via un dashboard simple et visuel.
-
----
-
-## Fonctionnalités
-
-### Fonctionnalités principales (MVP)
-
-- **rename** : Renomme les captures selon le format `Screenshot_YYYY-MM-DD_AppName.png`
-- **Auto organize** : Classe automatiquement dans des sous-dossiers par date
-- **Tag system** : Ajout manuel ou automatique de tags
-- **Dashboard** : Vue des statistiques et historique
-- **Toggle ON/OFF** : Activer ou désactiver le watcher facilement
-
-### Fonctionnalités secondaires
-
-- Notifications système pour chaque capture traitée
-- Gestion des fichiers verrouillés ou en conflit
-- Historique des captures traitées
+*Smart Screenshot Organizer* monitors a selected folder, automatically renames each screenshot, organizes them by date and application, and allows tags to be added. The user keeps full control through a simple and visual dashboard.
 
 ---
 
-## Architecture Technique
+## Features
 
-- **Pattern :** MVVM (Model-View-ViewModel)
-- **Main Process :** Gestion des fichiers, watcher, IPC
-- **Renderer Process :** Interface utilisateur et dashboard
-- **Dossiers :** `/src/main`, `/src/renderer`, `/src/shared`, `/assets`, `/doc`
+### Core Features (MVP)
+
+* **Auto rename**: Renames screenshots using the format `Screenshot_YYYY-MM-DD_AppName.png`
+* **Auto organize**: Automatically sorts screenshots into subfolders by date
+* **Tag system**: Manual or automatic tag assignment
+* **Dashboard**: View statistics and history
+* **Toggle ON/OFF**: Easily enable or disable the watcher
+
+### Secondary Features
+
+* System notifications for each processed screenshot
+* Handling of locked or conflicting files
+* History of processed screenshots
+
+---
+
+## Technical Architecture
+
+* **Pattern:** MVVM (Model-View-ViewModel)
+* **Main Process:** File management, watcher, IPC
+* **Renderer Process:** User interface and dashboard
+* **Directories:** `/src/main`, `/src/renderer`, `/src/shared`, `/assets`, `/doc`
 
 ---
 
 ## UML
 
-- **Diagramme de Cas d’Utilisation** : Interaction utilisateur avec le watcher et le dashboard
-- **Diagramme de Classes** : Screenshot, ScreenshotWatcher, FileClassifier, FileService, TagManager, IPCHandlers
-- **Diagramme de Séquence** : Nouveau fichier détecté → classification → renommage → notification
-- **Diagramme de Déploiement** : Electron App → Node.js → File System / OS
+* **Use Case Diagram:** User interaction with the watcher and the dashboard
+* **Class Diagram:** Screenshot, ScreenshotWatcher, FileClassifier, FileService, TagManager, IPCHandlers
+* **Sequence Diagram:** New file detected → classification → renaming → notification
+* **Deployment Diagram:** Electron App → Node.js → File System / OS
 
 ---
 
-## Technologies Utilisées
+## Technologies Used
 
-- Electron (desktop app)
-- html css (interface)
-- Node.js (backend local)
-- fs / IPC (interaction avec le système)
+* Electron (desktop application)
+* Vue.js (interface)
+* Node.js (local backend)
+* fs / IPC (system interaction)
 
 ---
 
 ## Installation
 
-### Prérequis
+### Requirements
 
-- Node.js v18+
-- NPM ou Yarn
-- Système Windows / macOS / Linux
+* Node.js v18+
+* NPM or Yarn
+* Windows / macOS / Linux system
 
-### Cloner le dépôt
+### Clone the repository
 
 ```bash
 git clone https://github.com/jahaa69/smart-screenshot-organizer.git
 cd smart-screenshot-organizer
 ```
 
-### Installer les dépendances
+### Install dependencies
 
 ```bash
 npm install
 sudo apt install libnss3
 ```
 
-### Lancement en développement
+### Run in development mode
 
 ```bash
 npm run dev
 ```
 
-### Build production
+### Production build
 
 ```bash
 npm run build
@@ -108,45 +106,45 @@ npm run build
 
 ---
 
-## Tests & Gestion des Erreurs
+## Testing & Error Handling
 
-- Les fichiers verrouillés ne sont pas déplacés, notification affichée
-- Inputs vides ou dossier non trouvé généreront un message d’erreur
-- Historique des actions pour debug et suivi
-
----
-
-## Améliorations Futures
-
-- Intégration OCR pour lecture du contenu des screenshots
-- Classification automatique via IA
-- Support multi-dossiers et multi-utilisateurs
-- Export CSV des statistiques
+* Locked files are not moved and a notification is displayed
+* Empty inputs or missing folders generate a clear error message
+* Action history is kept for debugging and tracking purposes
 
 ---
 
-## Transparence IA 🤖
+## Future Improvements
 
-- **Prompts utilisés :** Génération des diagrammes UML et suggestions d’architecture
-- **Parties générées par IA :** Diagrammes de classes, séquences, structure initiale du README
-- **Parties développées manuellement :** Logique métier, watcher, interface et dashboard
-- **Analyse critique IA :** La proposition initiale de watcher était synchrone ; refactor vers async/await pour performance
-
----
-
-## Auto-Critique
-
-- OCR et reconnaissance automatique d’application non implémentés
-- Gestion multi-dossiers à améliorer
-- Dashboard simplifié pour MVP, mais scalable
-- Documentation UML complète pour prouver la structure
+* OCR integration to read screenshot content
+* Automatic classification using AI
+* Multi-folder and multi-user support
+* CSV export of statistics
 
 ---
 
-## Licence
+## AI Transparency 🤖
 
-MIT License – libre d’utilisation et de modification
+* **Prompts used:** Generation of UML diagrams and architecture suggestions
+* **AI-generated parts:** Class diagrams, sequence diagrams, initial README structure
+* **Manually developed parts:** Business logic, watcher, interface, and dashboard
+* **AI critical review:** The initial watcher proposal was synchronous; it was refactored to async/await for better performance
 
 ---
 
-Soléane et Bastien
+## Self-Criticism
+
+* OCR and automatic application recognition not implemented
+* Multi-folder management needs improvement
+* Dashboard simplified for the MVP but designed to scale
+* Complete UML documentation provided to demonstrate the architecture
+
+---
+
+## License
+
+MIT License – free to use and modify
+
+---
+
+Soléane and Bastien
