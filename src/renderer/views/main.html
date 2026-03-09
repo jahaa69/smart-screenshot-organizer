@@ -58,7 +58,10 @@
           </svg>
         </div>
         <div class="stat-info">
-          <span class="stat-label">Size In Disk</span>
+          <div class="stat-info__header">
+            <span class="stat-label">Size In Disk</span>
+            <span class="disk-size-label" id="disk-size-label">—</span>
+          </div>
           <div class="disk-bar">
             <div class="disk-bar__fill" id="disk-fill"></div>
           </div>
@@ -125,9 +128,12 @@
         <span class="file-row__name" id="val-next">—</span>
     </div>
     
-</div>
-<button id="test" title="Test button"></button>
-<button><a href="organizedView.html">Organized View</a></button>
+    </div>
+
+    <div class="actions-row">
+      <button id="test" class="icon-button" title="Test button"></button>
+      <a href="organizedView.html" class="primary-link-button">Organized View</a>
+    </div>
 
 <!-- Screenshot Statistics Modal -->
 <div id="stats-modal" class="modal">

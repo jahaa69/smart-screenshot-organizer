@@ -1,6 +1,6 @@
 const { ipcMain, Notification } = require("electron");
 const { getFiles } = require("./ScreenshotWatcher");
-const { moveFile } = require("./FileService.js");
+const { moveFile, listOrganizedFiles } = require("./FileService.js");
 const { getStats } = require("./StatFile.js");
 
 let mainWindow = null;
@@ -83,6 +83,15 @@ function setupIPCHandlers(win) {
 
   // Les autres handlers restent simples
   ipcMain.handle("get-files", async () => await getFiles());
+
+  ipcMain.handle("get-organized-files", async () => {
+    try {
+      return await listOrganizedFiles();
+    } catch (err) {
+      console.error("Erreur pendant la récupération des fichiers organisés:", err);
+      return [];
+    }
+  });
   
   ipcMain.handle("start-watcher", async () => {
     // Ce handler peut être utilisé pour démarrer le watcher si nécessaire

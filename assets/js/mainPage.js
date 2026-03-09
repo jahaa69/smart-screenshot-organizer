@@ -31,6 +31,15 @@
       }, 3000);
     }
     
+    function formatBytes(bytes) {
+        if (!bytes || bytes <= 0) return '0 B';
+        const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        const k = 1024;
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        const value = bytes / Math.pow(k, i);
+        return `${value.toFixed(value >= 10 ? 0 : 1)} ${units[i]}`;
+    }
+
     // ── Update UI from stats object ────────────────────────
     function applyStats(stats) {
         document.getElementById('val-today').textContent     = stats.screenshotsToday ?? 0
@@ -39,6 +48,7 @@
         document.getElementById('val-organized').textContent = stats.lastOrganized    || '—'
         document.getElementById('val-next').textContent      = stats.nextFile         || '—'
         document.getElementById('disk-fill').style.width     = ((stats.diskUsage ?? 0.28) * 100) + '%'
+        document.getElementById('disk-size-label').textContent = formatBytes(stats.folderSizeBytes || 0)
         
         autoOrganize = stats.isAutoOrganize ?? true
         document.getElementById('toggle-auto').classList.toggle('on', autoOrganize)
@@ -130,25 +140,8 @@ modal.addEventListener('click', (e) => {
 });
 
 function updateModalStats(stats) {
-    // Calculer les stats pour cette semaine
-    const today = new Date();
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay());
-    startOfWeek.setHours(0, 0, 0, 0);
-    
-    // Récupérer tous les fichiers du dossier Organize pour calculer par date
-    window.electronAPI.getFiles().then(files => {
-        let thisWeek = 0;
-        // Note: getFiles retourne juste les noms, on devrait avoir une API pour les détails
-        // Pour maintenant, utiliser une approximation basée sur le nombre de fichiers
-        thisWeek = Math.floor(stats.totalOrganized * 0.15) || 0; // ~15% par semaine en moyenne
-    }).catch(() => {
-        // En cas d'erreur, utiliser une estimation
-        const thisWeek = Math.floor(stats.totalOrganized * 0.15) || 0;
-        document.getElementById('modal-week').textContent = thisWeek;
-    });
-    
     document.getElementById('modal-today').textContent = stats.screenshotsToday || 0;
+    document.getElementById('modal-week').textContent = stats.screenshotsThisWeek ?? 0;
     document.getElementById('modal-total').textContent = stats.totalOrganized || 0;
 }
 // ── Boot ───────────────────────────────────────────────

@@ -1,4 +1,4 @@
-// ── Demo data (remplacé par vrais fichiers via electronAPI) ──────────────
+// ── Données de démo (fallback si Electron / IPC indisponible) ─────────────
 const DEMO_FILES = [
   { name: 'ScreenShot_2024-04-28_Chrome.png',   category: 'Chrome',   dateTaken: '2024-04-28 14:05', modified: '2024-04-28 14:05', size: 842400,  tags: ['Work', 'Important'] },
   { name: 'ScreenShot_2024-04-27_Chrome.png',   category: 'Chrome',   dateTaken: '2024-04-27 09:32', modified: '2024-04-27 09:33', size: 1240000, tags: ['Work'] },
@@ -117,14 +117,24 @@ function render() {
       `<span class="tag-pill ${tagClass(t)}">${escHtml(t)}</span>`
     ).join('');
 
-    const thumb = `
-      <div class="file-thumb">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
-          <rect x="3" y="3" width="18" height="18" rx="2"/>
-          <path d="M3 15l5-5 4 4 3-3 6 6"/>
-          <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>
-        </svg>
-      </div>`;
+    let thumb;
+    if (f.filePath) {
+      const imgSrc = 'file:///' + f.filePath.replace(/\\/g, '/');
+      thumb = `
+        <div class="file-thumb">
+          <img src="${imgSrc}" alt="${escHtml(f.name)}" />
+        </div>`;
+    } else {
+      // Fallback: icône générique si aucun chemin n'est fourni (mode démo, etc.)
+      thumb = `
+        <div class="file-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M3 15l5-5 4 4 3-3 6 6"/>
+            <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>`;
+    }
 
     return `
       <div class="file-row" data-index="${i}" style="animation-delay:${i * 0.03}s">
