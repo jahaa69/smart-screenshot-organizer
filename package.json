@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/jahaa69/smart-screenshot-organizer#readme",
   "devDependencies": {
-    "electron": "^40.4.1"
+    "electron": "^40.8.0"
   },
   "dependencies": {
     "chokidar": "^5.0.0"

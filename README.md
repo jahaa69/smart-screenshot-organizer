@@ -83,7 +83,7 @@ Comment automatiser le tri et la classification des captures d’écran tout en 
 ### Cloner le dépôt
 
 ```bash
-git clone https://github.com/ton-utilisateur/smart-screenshot-organizer.git
+git clone https://github.com/jahaa69/smart-screenshot-organizer.git
 cd smart-screenshot-organizer
 ```
 
@@ -91,6 +91,7 @@ cd smart-screenshot-organizer
 
 ```bash
 npm install
+sudo apt install libnss3
 ```
 
 ### Lancement en développement
