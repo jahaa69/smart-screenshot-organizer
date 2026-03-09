@@ -17,25 +17,44 @@ function getFiles() {
     
     (async () => {
       try {
+        console.log(`[getFiles] Checking directory: ${pathImg}`);
+        
+        // Vérifier que le dossier existe
+        try {
+          await fsp.access(pathImg);
+        } catch {
+          console.log(`[getFiles] Directory does not exist: ${pathImg}`);
+          resolve([]);
+          return;
+        }
+        
         const files = await fsp.readdir(pathImg);
+        console.log(`[getFiles] All files in directory:`, files);
+        
         const ORGANIZE_DIR = 'Organize';
         
         // Filtrer : exclure le dossier Organize et ne garder que les fichiers
         const validFiles = [];
         for (const file of files) {
-          if (file === ORGANIZE_DIR) continue; // Exclure le dossier Organize
+          if (file === ORGANIZE_DIR) {
+            console.log(`[getFiles] Skipping Organize folder`);
+            continue;
+          }
           
           const filePath = path.join(pathImg, file);
           const stats = await fsp.stat(filePath);
           if (stats.isFile()) { // Vérifier que c'est un fichier
+            console.log(`[getFiles] Found file: ${file}`);
             validFiles.push(file);
+          } else {
+            console.log(`[getFiles] Skipping non-file: ${file} (isDirectory: ${stats.isDirectory()})`);
           }
         }
         
-        console.log('Files in directory:', validFiles);
+        console.log(`[getFiles] Valid files to process:`, validFiles);
         resolve(validFiles);
       } catch (err) {
-        console.error('Error reading directory:', err);
+        console.error(`[getFiles] Error reading directory:`, err);
         reject(err);
       }
     })();
