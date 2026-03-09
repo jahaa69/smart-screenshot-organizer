@@ -2,6 +2,7 @@ const fs = require('fs/promises');
 const path = require('path');
 const os = require('os');
 const fsSync = require('fs');
+const { getFiles } = require('./ScreenshotWatcher');
 
 // Configuration des chemins (on cible le dossier Organize créé par FileService)
 const SOURCE_DIR = path.join(os.homedir(), 'Pictures', 'Screenshots');
@@ -95,6 +96,8 @@ async function getStats() {
         let screenshotsThisWeek = 0;
         let totalOrganized = 0;
         let lastFile = "Aucun";
+        let lastOrganized = "Aucun";
+        let nextFile = "Aucun";
         let folderSizeBytes = 0;
         
         // 1. Essayer de lire le contenu du dossier organisé
@@ -139,6 +142,7 @@ async function getStats() {
                 b.stats.birthtime - a.stats.birthtime
             )[0];
             lastFile = lastFileObj ? lastFileObj.name : "Aucun";
+            lastOrganized = lastFile;
 
             // 6. Taille totale du dossier organisé
             folderSizeBytes = await getFolderSizeBytes(ORGANIZE_DIR);
@@ -152,6 +156,16 @@ async function getStats() {
         const diskInfo = await getDiskInfo();
         console.log("[getStats] diskInfo =", diskInfo);
 
+        // 7 bis. Déterminer le prochain fichier à organiser (dans SOURCE_DIR hors Organize)
+        try {
+            const pendingFiles = await getFiles();
+            if (pendingFiles && pendingFiles.length > 0) {
+                nextFile = pendingFiles[0];
+            }
+        } catch (err) {
+            console.warn("[getStats] Impossible de récupérer les fichiers en attente :", err.message);
+        }
+
         const folderUsageRatio =
             diskInfo.totalBytes > 0
                 ? Math.min(folderSizeBytes / diskInfo.totalBytes, 1)
@@ -162,6 +176,8 @@ async function getStats() {
             screenshotsThisWeek,
             totalOrganized,
             lastFile,
+            lastOrganized,
+            nextFile,
             diskUsage: folderUsageRatio,
             folderSizeBytes,
         };

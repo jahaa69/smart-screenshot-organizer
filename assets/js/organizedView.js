@@ -90,6 +90,8 @@ function getFiltered() {
       case 'date-asc':  return new Date(a.dateTaken) - new Date(b.dateTaken);
       case 'name-asc':  return a.name.localeCompare(b.name);
       case 'name-desc': return b.name.localeCompare(a.name);
+      case 'category-asc':  return (a.category || '').localeCompare(b.category || '');
+      case 'category-desc': return (b.category || '').localeCompare(a.category || '');
       case 'size-desc': return (b.size || 0) - (a.size || 0);
       default: return 0;
     }
@@ -403,6 +405,21 @@ document.querySelectorAll('.filter-chip').forEach(btn => {
 sortSelect.addEventListener('change', () => {
   activeSort = sortSelect.value;
   render();
+});
+
+// Clic sur les en-têtes Name / Category pour trier
+document.querySelectorAll('.col-header--sortable').forEach(header => {
+  header.addEventListener('click', () => {
+    const sortKey = header.dataset.sort;
+    if (!sortKey) return;
+    if (sortKey === 'name') {
+      activeSort = activeSort === 'name-asc' ? 'name-desc' : 'name-asc';
+    } else if (sortKey === 'category') {
+      activeSort = activeSort === 'category-asc' ? 'category-desc' : 'category-asc';
+    }
+    sortSelect.value = activeSort;
+    render();
+  });
 });
 
 // Search
