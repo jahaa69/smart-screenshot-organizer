@@ -23,7 +23,7 @@ Comment automatiser le tri et la classification des captures d’écran tout en 
 
 ### Solution proposée
 
-*Smart Screenshot Organizer* surveille un dossier choisi, renomme automatiquement chaque capture, organise par date et application, et permet d’ajouter des tags. L’utilisateur conserve un contrôle total via un dashboard simple et visuel.
+*Smart Screenshot Organizer* surveille un dossier choisi, renomme chaque capture, organise par date et application, et permet d’ajouter des tags. L’utilisateur conserve un contrôle total via un dashboard simple et visuel.
 
 ---
 
@@ -31,7 +31,7 @@ Comment automatiser le tri et la classification des captures d’écran tout en 
 
 ### Fonctionnalités principales (MVP)
 
-- **Auto rename** : Renomme les captures selon le format `Screenshot_YYYY-MM-DD_AppName.png`
+- **rename** : Renomme les captures selon le format `Screenshot_YYYY-MM-DD_AppName.png`
 - **Auto organize** : Classe automatiquement dans des sous-dossiers par date
 - **Tag system** : Ajout manuel ou automatique de tags
 - **Dashboard** : Vue des statistiques et historique
@@ -66,7 +66,7 @@ Comment automatiser le tri et la classification des captures d’écran tout en 
 ## Technologies Utilisées
 
 - Electron (desktop app)
-- Vue.js (interface)
+- html css (interface)
 - Node.js (backend local)
 - fs / IPC (interaction avec le système)
 
@@ -111,7 +111,7 @@ npm run build
 ## Tests & Gestion des Erreurs
 
 - Les fichiers verrouillés ne sont pas déplacés, notification affichée
-- Inputs vides ou dossier non trouvé généreront un message d’erreur clair
+- Inputs vides ou dossier non trouvé généreront un message d’erreur
 - Historique des actions pour debug et suivi
 
 ---
