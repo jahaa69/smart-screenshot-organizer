@@ -53,6 +53,34 @@ body {
   flex-shrink: 0;
 }
 
+.back-button {
+  -webkit-app-region: no-drag;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+
+.back-button:hover {
+  background: var(--surface3);
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  transform: translateY(-1px);
+}
+
+.back-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
 .breadcrumb {
   display: flex;
   align-items: center;
