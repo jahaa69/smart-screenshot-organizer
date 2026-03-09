@@ -128,6 +128,36 @@
 </div>
 <button id="test" title="Test button"></button>
 <button><a href="organizedView.html">Organized View</a></button>
+
+<!-- Screenshot Statistics Modal -->
+<div id="stats-modal" class="modal">
+  <div class="modal__content">
+    <div class="modal__header">
+      <h2 class="modal__title">ScreenShot Statistics</h2>
+      <button class="modal__close" id="modal-close">✕</button>
+    </div>
+    <div class="modal__body">
+      <div class="stat-item">
+        <span class="stat-item__label">Today</span>
+        <span class="stat-item__value" id="modal-today">0</span>
+        <span class="stat-item__unit">Captured</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-item__label">This Week</span>
+        <span class="stat-item__value" id="modal-week">0</span>
+        <span class="stat-item__unit">Captured</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-item__label">Total ScreenShots</span>
+        <span class="stat-item__value" id="modal-total">0</span>
+        <span class="stat-item__unit">Captured</span>
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="modal__button" id="modal-button-close">Close</button>
+    </div>
+  </div>
+</div>
   </div>
 
   <script src="..\..\..\assets/js/mainPage.js"></script>
