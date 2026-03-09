@@ -61,6 +61,8 @@
           <option value="date-asc">Date ↑</option>
           <option value="name-asc">Name A–Z</option>
           <option value="name-desc">Name Z–A</option>
+          <option value="category-asc">Category A–Z</option>
+          <option value="category-desc">Category Z–A</option>
           <option value="size-desc">Size ↓</option>
         </select>
       </div>
@@ -68,8 +70,8 @@
   </div>
 
   <div class="col-headers" id="col-headers">
-    <div class="col-header col-header--name">Name <svg viewBox="0 0 10 10" fill="currentColor"><path d="M5 7L1 3h8z"/></svg></div>
-    <div class="col-header">Category</div>
+    <div class="col-header col-header--name col-header--sortable" data-sort="name" title="Trier par nom">Name <svg viewBox="0 0 10 10" fill="currentColor"><path d="M5 7L1 3h8z"/></svg></div>
+    <div class="col-header col-header--sortable" data-sort="category" title="Trier par catégorie">Category</div>
     <div class="col-header">Date Taken</div>
     <div class="col-header">Modified</div>
     <div class="col-header col-header--size">Size</div>

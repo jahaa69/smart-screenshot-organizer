@@ -196,6 +196,8 @@ body {
   cursor: pointer; transition: color 0.15s;
 }
 .col-header:hover { color: var(--text); }
+.col-header--sortable { cursor: pointer; }
+.col-header--sortable:hover { color: var(--text); }
 .col-header svg { width: 8px; height: 8px; opacity: 0.5; }
 .col-header--name { padding-left: 0; }
 .col-header--size { justify-content: flex-end; }
