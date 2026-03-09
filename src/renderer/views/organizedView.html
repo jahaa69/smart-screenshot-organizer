@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Organized Folder View</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="..\..\..\assets/css/organizedView.css" />
+</head>
+<body>
+
+  <div class="titlebar"></div>
+
+  <div class="topbar">
+    <div class="breadcrumb" id="breadcrumb">
+      <span class="breadcrumb__item--icon">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M.5 9.9a.5.5 0 01.5.5v2.5a1 1 0 001 1h12a1 1 0 001-1v-2.5a.5.5 0 011 0v2.5a2 2 0 01-2 2H2a2 2 0 01-2-2v-2.5a.5.5 0 01.5-.5z"/><path d="M7.646 1.146a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8.5 2.707V11.5a.5.5 0 01-1 0V2.707L5.354 4.854a.5.5 0 11-.708-.708l3-3z"/></svg>
+      </span>
+      <span class="breadcrumb__item" data-path="root">SceenShots</span>
+      <span class="breadcrumb__sep">›</span>
+      <span class="breadcrumb__item" data-path="year">2024</span>
+      <span class="breadcrumb__sep">›</span>
+      <span class="breadcrumb__item breadcrumb__item--active" data-path="month">April</span>
+      <span class="breadcrumb__chevron">
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 2l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </div>
+    <div class="topbar__actions">
+      <div class="search-box">
+        <svg class="search-box__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M15 15l-3-3" stroke-linecap="round"/></svg>
+        <input type="text" class="search-box__input" id="search-input" placeholder="Search screenshots…" />
+        <kbd class="search-box__kbd">⌘F</kbd>
+      </div>
+      <div class="view-toggle">
+        <button class="view-toggle__btn active" id="view-list" title="List view">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M2.5 12a.5.5 0 01.5-.5h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5z"/></svg>
+        </button>
+        <button class="view-toggle__btn" id="view-grid" title="Grid view">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 2.5A1.5 1.5 0 012.5 1h3A1.5 1.5 0 017 2.5v3A1.5 1.5 0 015.5 7h-3A1.5 1.5 0 011 5.5v-3zM8 2.5A1.5 1.5 0 019.5 1h3A1.5 1.5 0 0114 2.5v3A1.5 1.5 0 0112.5 7h-3A1.5 1.5 0 018 5.5v-3zM1 9.5A1.5 1.5 0 012.5 8h3A1.5 1.5 0 017 9.5v3A1.5 1.5 0 015.5 14h-3A1.5 1.5 0 011 12.5v-3zM8 9.5A1.5 1.5 0 019.5 8h3A1.5 1.5 0 0114 9.5v3A1.5 1.5 0 0112.5 14h-3A1.5 1.5 0 018 12.5v-3z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="filterbar">
+    <div class="filterbar__left">
+      <button class="filter-chip active" data-filter="all">All</button>
+      <button class="filter-chip" data-filter="Chrome"><span class="filter-chip__dot" style="background:#f97316"></span>Chrome</button>
+      <button class="filter-chip" data-filter="Firefox"><span class="filter-chip__dot" style="background:#a78bfa"></span>Firefox</button>
+      <button class="filter-chip" data-filter="Code"><span class="filter-chip__dot" style="background:#60a5fa"></span>Code</button>
+      <button class="filter-chip" data-filter="Terminal"><span class="filter-chip__dot" style="background:#4ade80"></span>Terminal</button>
+      <button class="filter-chip" data-filter="Other"><span class="filter-chip__dot" style="background:#94a3b8"></span>Other</button>
+    </div>
+    <div class="filterbar__right">
+      <span class="result-count" id="result-count">0 files</span>
+      <div class="sort-select-wrap">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4h12M4 8h8M6 12h4" stroke-linecap="round"/></svg>
+        <select class="sort-select" id="sort-select">
+          <option value="date-desc">Date ↓</option>
+          <option value="date-asc">Date ↑</option>
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="size-desc">Size ↓</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-headers" id="col-headers">
+    <div class="col-header col-header--name">Name <svg viewBox="0 0 10 10" fill="currentColor"><path d="M5 7L1 3h8z"/></svg></div>
+    <div class="col-header">Category</div>
+    <div class="col-header">Date Taken</div>
+    <div class="col-header">Modified</div>
+    <div class="col-header col-header--size">Size</div>
+    <div class="col-header">Tags</div>
+  </div>
+
+  <div class="file-list" id="file-list"></div>
+
+  <div class="empty-state" id="empty-state" style="display:none">
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2">
+      <rect x="8" y="12" width="48" height="40" rx="4"/>
+      <path d="M20 32h24M20 40h16" stroke-linecap="round"/>
+    </svg>
+    <p>No screenshots found</p>
+    <span>Try adjusting your search or filters</span>
+  </div>
+
+  <script src="..\..\..\assets/js/organizedView.js"></script>
+</body>
+</html>
