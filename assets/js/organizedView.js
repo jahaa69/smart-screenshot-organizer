@@ -154,16 +154,190 @@ function render() {
       </div>`;
   }).join('');
 
-  // Row click = select
-  fileList.querySelectorAll('.file-row').forEach(row => {
+  // Row click = select, double-click = edit
+  fileList.querySelectorAll('.file-row').forEach((row, index) => {
     row.addEventListener('click', () => {
       fileList.querySelectorAll('.file-row').forEach(r => r.classList.remove('selected'));
       row.classList.add('selected');
       selectedRow = row;
     });
+    row.addEventListener('dblclick', () => {
+      const file = getFiltered()[index];
+      if (file) {
+        openFileModal(file, index);
+      }
+    });
     row.addEventListener('contextmenu', e => showContextMenu(e));
   });
 }
+
+// ── File Modal ────────────────────────────────────────────────────────────
+
+let editingFile = null;
+let editingFileIndex = null;
+const modal = document.getElementById('file-modal');
+const modalOverlay = document.getElementById('modal-overlay');
+const modalClose = document.getElementById('modal-close');
+const modalCancel = document.getElementById('modal-cancel');
+const modalSave = document.getElementById('modal-save');
+const modalNameInput = document.getElementById('modal-name');
+const modalCategorySelect = document.getElementById('modal-category');
+const modalTagInput = document.getElementById('modal-tag-input');
+const modalTagsList = document.getElementById('modal-tags-list');
+const modalPreviewImg = document.getElementById('modal-preview-img');
+
+function openFileModal(file, fileIndex) {
+  editingFile = { ...file };
+  // Find the actual index in allFiles, not the filtered index
+  editingFileIndex = allFiles.findIndex(f => f.name === file.name && f.filePath === file.filePath);
+
+  // Set preview
+  if (file.filePath) {
+    const imgSrc = 'file:///' + file.filePath.replace(/\\/g, '/');
+    modalPreviewImg.src = imgSrc;
+  }
+
+  // Set name (without the category suffix)
+  const nameWithoutSuffix = removeCategSuffix(file.name);
+  modalNameInput.value = nameWithoutSuffix;
+
+  // Set category
+  modalCategorySelect.value = file.category || 'Other';
+
+  // Set tag (show the current tag in the input)
+  const currentTag = (file.tags && file.tags.length > 0) ? file.tags[0] : '';
+  if (currentTag && currentTag !== 'Untagged') {
+    modalTagInput.value = currentTag;
+  } else {
+    modalTagInput.value = '';
+  }
+
+  // Set tags display
+  renderModalTags();
+
+  // Show modal
+  modal.style.display = 'flex';
+}
+
+// Fonction utilitaire pour supprimer le suffixe de catégorie du nom
+function removeCategSuffix(fileName) {
+  const categories = ['Chrome', 'Firefox', 'Code', 'Terminal', 'Other'];
+  const ext = fileName.substring(fileName.lastIndexOf('.'));
+  const nameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+  
+  // Vérifier si le fichier finit par un suffixe de catégorie
+  for (const cat of categories) {
+    if (nameWithoutExt.endsWith('_' + cat)) {
+      // Retirer le suffixe
+      return nameWithoutExt.substring(0, nameWithoutExt.length - cat.length - 1) + ext;
+    }
+  }
+  
+  // Si pas de suffixe trouvé, retourner le nom original
+  return fileName;
+}
+
+function closeFileModal() {
+  modal.style.display = 'none';
+  editingFile = null;
+  editingFileIndex = null;
+}
+
+function renderModalTags() {
+  const tags = editingFile.tags || [];
+  const currentTag = tags[0] || 'Untagged';
+  
+  // Affiche le tag actuel en grand
+  modalTagsList.innerHTML = `
+    <div class="file-modal__tag-display">
+      <div class="file-modal__current-tag">${escHtml(currentTag)}</div>
+      <p style="font-size: 11px; color: var(--text-muted); margin: 8px 0 0 0;">This file is in the <strong>${escHtml(currentTag)}</strong> folder</p>
+    </div>
+  `;
+}
+
+function addTagToModal() {
+  const newTag = modalTagInput.value.trim();
+  if (!newTag) return;
+
+  if (!editingFile.tags) {
+    editingFile.tags = [];
+  }
+
+  // Remplacer le tag (un seul tag par fichier = un seul dossier)
+  editingFile.tags = [newTag];
+  modalTagInput.value = '';
+  renderModalTags();
+}
+
+async function saveFileChanges() {
+  if (!editingFile) return;
+
+  let userInput = modalNameInput.value.trim();
+  if (!userInput) {
+    alert('Please enter a file name');
+    return;
+  }
+
+  const newCategory = modalCategorySelect.value;
+  const ext = editingFile.name.substring(editingFile.name.lastIndexOf('.'));
+  
+  // Extraire le nom sans extension et sans ancien suffixe de catégorie
+  const nameWithoutExt = userInput.includes('.')
+    ? userInput.substring(0, userInput.lastIndexOf('.'))
+    : userInput;
+  
+  // Ajouter le suffixe de la nouvelle catégorie
+  const newName = `${nameWithoutExt}_${newCategory}${ext}`;
+
+  // Si l'utilisateur a tapé un tag dans le champ mais n'a pas appuyé sur Entrée, l'ajouter maintenant
+  const tagInputValue = modalTagInput.value.trim();
+  if (tagInputValue) {
+    editingFile.tags = [tagInputValue];
+  }
+
+  try {
+    // Call IPC to update file
+    await window.electronAPI.updateFile({
+      filePath: editingFile.filePath,  // Le chemin complet du fichier
+      oldName: editingFile.name,
+      newName: newName,
+      tags: editingFile.tags || []
+    });
+
+    // Reload all files from backend to get fresh data
+    try {
+      allFiles = await window.electronAPI.getOrganizedFiles();
+    } catch (e) {
+      console.warn('Could not reload from backend, using demo data:', e);
+      allFiles = DEMO_FILES;
+    }
+
+    // Re-render
+    render();
+    closeFileModal();
+  } catch (err) {
+    console.error('Error saving file changes:', err);
+    alert('Failed to save changes: ' + err.message);
+  }
+}
+
+// Modal event listeners
+modalClose.addEventListener('click', closeFileModal);
+modalCancel.addEventListener('click', closeFileModal);
+modalOverlay.addEventListener('click', (e) => {
+  if (e.target === modalOverlay) {
+    closeFileModal();
+  }
+});
+modalSave.addEventListener('click', saveFileChanges);
+
+modalTagInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    addTagToModal();
+  }
+});
 
 // ── Context menu ──────────────────────────────────────────────────────────
 function showContextMenu(e) {

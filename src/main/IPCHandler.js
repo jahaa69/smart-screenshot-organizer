@@ -1,6 +1,6 @@
 const { ipcMain, Notification } = require("electron");
 const { getFiles } = require("./ScreenshotWatcher");
-const { moveFile, listOrganizedFiles } = require("./FileService.js");
+const { moveFile, listOrganizedFiles, renameFile, updateFileTags } = require("./FileService.js");
 const { getStats } = require("./StatFile.js");
 
 let mainWindow = null;
@@ -113,6 +113,28 @@ function setupIPCHandlers(win) {
       ...fileStats,
       isAutoOrganize: isAutoOrganizeActive
     };
+  });
+
+  ipcMain.handle("update-file", async (event, data) => {
+    try {
+      let { filePath, oldName, newName, tags } = data;
+      let currentFilePath = filePath;
+      
+      // Rename file if name changed
+      if (oldName !== newName) {
+        currentFilePath = await renameFile(filePath, newName);
+      }
+      
+      // Update tags (which moves the file to the tag folder)
+      if (tags && tags.length > 0) {
+        await updateFileTags(currentFilePath, tags);
+      }
+      
+      return { success: true, message: 'File updated successfully' };
+    } catch (err) {
+      console.error('Error updating file:', err);
+      throw err;
+    }
   });
 }
 

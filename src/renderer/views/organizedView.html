@@ -6,7 +6,7 @@
   <title>Organized Folder View</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="..\..\..\assets/css/organizedView.css" />
+  <link rel="stylesheet" href="../../../assets/css/organizedView.css" />
 </head>
 <body>
   <div class="topbar">
@@ -87,6 +87,55 @@
     <span>Try adjusting your search or filters</span>
   </div>
 
-  <script src="..\..\..\assets/js/organizedView.js"></script>
+  <!-- Modal for editing file -->
+  <div class="file-modal" id="file-modal" style="display:none">
+    <div class="file-modal__overlay" id="modal-overlay"></div>
+    <div class="file-modal__dialog">
+      <div class="file-modal__header">
+        <h2>Edit Screenshot</h2>
+        <button class="file-modal__close" id="modal-close">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+        </button>
+      </div>
+      <div class="file-modal__content">
+        <div class="file-modal__preview-section">
+          <h3>Preview</h3>
+          <div class="file-modal__preview" id="modal-preview">
+            <img id="modal-preview-img" src="" alt="Preview" />
+          </div>
+        </div>
+        <div class="file-modal__edit-section">
+          <div class="file-modal__form-group">
+            <label for="modal-name">File Name</label>
+            <input type="text" id="modal-name" class="file-modal__input" />
+          </div>
+          <div class="file-modal__form-group">
+            <label for="modal-category">Category</label>
+            <select id="modal-category" class="file-modal__input">
+              <option value="Chrome">Chrome</option>
+              <option value="Firefox">Firefox</option>
+              <option value="Code">Code</option>
+              <option value="Terminal">Terminal</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="file-modal__form-group">
+            <label for="modal-tags">Tag (Folder)</label>
+            <div class="file-modal__tags-input" id="modal-tags-input">
+              <input type="text" id="modal-tag-input" class="file-modal__tag-input" placeholder="Type a new tag name (e.g., Overwatch, Work)..." />
+              <div class="file-modal__tags-list" id="modal-tags-list"></div>
+            </div>
+            <p style="font-size: 11px; color: var(--text-muted); margin: 8px 0 0 0;">Type a tag name and press Enter, or just click Save. If the folder doesn't exist, it will be created automatically.</p>
+          </div>
+        </div>
+      </div>
+      <div class="file-modal__footer">
+        <button class="file-modal__btn file-modal__btn--cancel" id="modal-cancel">Cancel</button>
+        <button class="file-modal__btn file-modal__btn--save" id="modal-save">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../../assets/js/organizedView.js"></script>
 </body>
 </html>

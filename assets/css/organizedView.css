@@ -327,3 +327,292 @@ body {
 .ctx-menu__item--danger { color: #f87171; }
 .ctx-menu__item--danger svg { color: #f87171; }
 .ctx-menu__sep { height: 1px; background: var(--border); margin: 3px 0; }
+
+/* ── FILE MODAL ── */
+.file-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.file-modal__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(2px);
+}
+.file-modal__dialog {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  width: 90%;
+  max-width: 700px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.2s ease;
+}
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.file-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.file-modal__header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+.file-modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+.file-modal__close:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+.file-modal__close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.file-modal__content {
+  flex: 1;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  padding: 24px;
+  gap: 24px;
+}
+@media (max-width: 600px) {
+  .file-modal__content {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+}
+
+.file-modal__preview-section h3,
+.file-modal__edit-section h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+  margin-top: 0;
+}
+
+.file-modal__preview {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.file-modal__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.file-modal__edit-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.file-modal__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.file-modal__form-group label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.file-modal__input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.file-modal__input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(96,165,250,0.1);
+}
+.file-modal__input::placeholder {
+  color: var(--text-dim);
+}
+
+.file-modal__tags-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.file-modal__tag-input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.file-modal__tag-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(96,165,250,0.1);
+}
+.file-modal__tag-input::placeholder {
+  color: var(--text-dim);
+}
+
+.file-modal__tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.file-modal__tag-display {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(96,165,250,0.1);
+  border: 1px solid rgba(96,165,250,0.2);
+  border-radius: 8px;
+}
+
+.file-modal__current-tag {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue);
+  padding: 6px;
+  background: rgba(96,165,250,0.15);
+  border-radius: 6px;
+  padding: 8px 12px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.file-modal__tag-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: rgba(96,165,250,0.15);
+  border: 1px solid rgba(96,165,250,0.3);
+  color: var(--blue);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.file-modal__tag-item button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+}
+.file-modal__tag-item button:hover {
+  opacity: 0.7;
+}
+
+.file-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.file-modal__btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.file-modal__btn--cancel {
+  background: transparent;
+  color: var(--text);
+}
+.file-modal__btn--cancel:hover {
+  background: var(--surface2);
+  border-color: rgba(255,255,255,0.15);
+}
+.file-modal__btn--save {
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue);
+}
+.file-modal__btn--save:hover {
+  background: #1e90ff;
+  border-color: #1e90ff;
+  box-shadow: 0 4px 12px rgba(96,165,250,0.3);
+}
+.file-modal__btn--save:active {
+  transform: scale(0.98);
+}
