@@ -6,6 +6,31 @@
     // ── State ──────────────────────────────────────────────
     let autoOrganize = false
     
+    // ── Notification Helper ────────────────────────────────
+    function showNotification(title, message) {
+      const container = document.getElementById('notification-container');
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.innerHTML = `
+        <div class="notification-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+          </svg>
+        </div>
+        <div class="notification-text">
+          <div class="notification-title">${title}</div>
+          <div class="notification-message">${message}</div>
+        </div>
+      `;
+      container.appendChild(notification);
+
+      // Auto-remove after 3 seconds
+      setTimeout(() => {
+        notification.classList.add('remove');
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+    
     // ── Update UI from stats object ────────────────────────
     function applyStats(stats) {
         document.getElementById('val-today').textContent     = stats.screenshotsToday ?? 0
@@ -139,6 +164,12 @@ async function init() {
     window.electronAPI.onStatsUpdated((newStats) => {
         console.log("Stats auto-actualisées :", newStats);
         applyStats(newStats);
+    });
+
+    // On écoute les événements d'organisation de fichier
+    window.electronAPI.onFileOrganized((data) => {
+        console.log("Fichier organisé :", data.fileName);
+        showNotification('File Organized', `${data.fileName} has been renamed and sorted!`);
     });
   } catch(e) {
     console.warn("Impossible de charger les stats initiales, utilisation des valeurs par défaut.");

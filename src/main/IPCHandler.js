@@ -1,4 +1,4 @@
-const { ipcMain } = require("electron");
+const { ipcMain, Notification } = require("electron");
 const { getFiles } = require("./ScreenshotWatcher");
 const { moveFile } = require("./FileService.js");
 const { getStats } = require("./StatFile.js");
@@ -6,6 +6,21 @@ const { getStats } = require("./StatFile.js");
 let mainWindow = null;
 let isAutoOrganizeActive = false;
 let watcherInterval = null; // Pour stocker la boucle de recherche
+
+// Function to show file organized notification to renderer
+function notifyFileOrganized(fileName) {
+  try {
+    console.log(`[FileOrganized] Notifying renderer about: ${fileName}`);
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send('file-organized', {
+        fileName: fileName,
+        timestamp: new Date().toISOString()
+      });
+    }
+  } catch (err) {
+    console.error('[FileOrganized] Error sending notification:', err);
+  }
+}
 
 async function notifyStatsUpdate() {
   if (mainWindow && mainWindow.webContents) {
@@ -26,8 +41,13 @@ async function processAutoOrganization() {
       console.log(`${files.length} fichiers trouvés. Organisation en cours...`);
       
       for (const file of files) {
-        await moveFile(file); // On déplace chaque fichier trouvé
-        await notifyStatsUpdate(); // Notifier le renderer après chaque déplacement
+        try {
+          await moveFile(file); // On déplace chaque fichier trouvé
+          notifyFileOrganized(file); // Notifier le renderer
+          await notifyStatsUpdate(); // Notifier le renderer après chaque déplacement
+        } catch (err) {
+          console.error(`Erreur lors du déplacement de ${file}:`, err);
+        }
       }
     }
   } catch (err) {
@@ -73,6 +93,7 @@ function setupIPCHandlers(win) {
   
   ipcMain.handle("move-file", async (event, fileName) => {
     const result = await moveFile(fileName);
+    notifyFileOrganized(fileName); // Notifier le renderer
     await notifyStatsUpdate(); // Notifier après déplacement manuel
     return result;
   });

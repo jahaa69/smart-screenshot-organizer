@@ -7,7 +7,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setAutoOrganize: (value) => ipcRenderer.invoke('set-auto-organize', value),
   getStats: () => ipcRenderer.invoke('get-stats'), // Vérifie que cette ligne est bien complète
   startWatcher: () => ipcRenderer.invoke('start-watcher'),
-  onStatsUpdated: (callback) => ipcRenderer.on('stats-updated', (event, stats) => callback(stats))
+  onStatsUpdated: (callback) => ipcRenderer.on('stats-updated', (event, stats) => callback(stats)),
+  onFileOrganized: (callback) => ipcRenderer.on('file-organized', (event, data) => callback(data))
 })
 
 window.addEventListener('DOMContentLoaded', () => {
