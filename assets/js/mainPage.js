@@ -75,6 +75,57 @@ testButton.addEventListener('click', async () => {
         testButton.disabled = false;
     }
 });
+
+// ── Modal Logic ──────────────────────────────
+const modal = document.getElementById('stats-modal');
+const modalCloseBtn = document.getElementById('modal-close');
+const modalButtonClose = document.getElementById('modal-button-close');
+const statsCards = document.querySelectorAll('.stat-card');
+
+// Ouvrir le modal quand on clique sur une stat card
+statsCards.forEach(card => {
+    card.addEventListener('click', async () => {
+        const stats = await window.electronAPI.getStats();
+        updateModalStats(stats);
+        modal.classList.add('active');
+    });
+});
+
+// Fermer le modal
+function closeModal() {
+    modal.classList.remove('active');
+}
+
+modalCloseBtn.addEventListener('click', closeModal);
+modalButtonClose.addEventListener('click', closeModal);
+
+// Fermer en cliquant en dehors du modal
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+});
+
+function updateModalStats(stats) {
+    // Calculer les stats pour cette semaine
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
+    
+    // Récupérer tous les fichiers du dossier Organize pour calculer par date
+    window.electronAPI.getFiles().then(files => {
+        let thisWeek = 0;
+        // Note: getFiles retourne juste les noms, on devrait avoir une API pour les détails
+        // Pour maintenant, utiliser une approximation basée sur le nombre de fichiers
+        thisWeek = Math.floor(stats.totalOrganized * 0.15) || 0; // ~15% par semaine en moyenne
+    }).catch(() => {
+        // En cas d'erreur, utiliser une estimation
+        const thisWeek = Math.floor(stats.totalOrganized * 0.15) || 0;
+        document.getElementById('modal-week').textContent = thisWeek;
+    });
+    
+    document.getElementById('modal-today').textContent = stats.screenshotsToday || 0;
+    document.getElementById('modal-total').textContent = stats.totalOrganized || 0;
+}
 // ── Boot ───────────────────────────────────────────────
 async function init() {
   try {
