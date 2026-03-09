@@ -1,10 +1,6 @@
 const fs = require('fs/promises');
 const path = require('path');
-const os = require('os');
-
-// Dossier source et destination
-const SOURCE_DIR = path.join(os.homedir(), 'Pictures', 'Screenshots');
-const TARGET_DIR = path.join(SOURCE_DIR, 'Organize');
+const { getSourceDir, getTargetDir } = require('./PathConfig');
 
 function inferCategoryFromName(fileName) {
   const base  = fileName.replace(/\.[^.]+$/, '');
@@ -15,8 +11,8 @@ function inferCategoryFromName(fileName) {
   return 'Other';
 }
 
-async function ensureTargetDirExists() {
-  await fs.mkdir(TARGET_DIR, { recursive: true });
+async function ensureTargetDirExists(dir = getTargetDir()) {
+  await fs.mkdir(dir, { recursive: true });
 }
 
 async function moveFile(fileName) {
@@ -24,11 +20,14 @@ async function moveFile(fileName) {
     throw new Error('Aucun nom de fichier fourni');
   }
 
-  const oldFilePath = path.join(SOURCE_DIR, fileName);
-  const newFilePath = path.join(TARGET_DIR, fileName);
+  const sourceDir = getSourceDir();
+  const targetDir = getTargetDir();
+
+  const oldFilePath = path.join(sourceDir, fileName);
+  const newFilePath = path.join(targetDir, fileName);
 
   try {
-    await ensureTargetDirExists();
+    await ensureTargetDirExists(targetDir);
     await fs.rename(oldFilePath, newFilePath);
     
     console.log(`Succes : ${fileName} deplace vers /Organize`);
@@ -39,9 +38,10 @@ async function moveFile(fileName) {
   }
 }
 
-async function listOrganizedFiles() {
+async function listOrganizedFiles(baseDir) {
   try {
-    await ensureTargetDirExists();
+    const targetDir = baseDir || getTargetDir();
+    await ensureTargetDirExists(targetDir);
     
     const result = [];
     
@@ -76,7 +76,7 @@ async function listOrganizedFiles() {
       }
     }
     
-    await scanDir(TARGET_DIR);
+    await scanDir(targetDir);
     return result;
   } catch (error) {
     console.error('Erreur lors de la lecture du dossier Organize:', error.message);
@@ -111,14 +111,15 @@ async function updateFileTags(filePath, tags) {
   const fileName = path.basename(filePath);
   
   try {
+    const targetRoot = getTargetDir();
     let newFilePath;
     
     if (newTag === 'Untagged') {
       // Si le tag est "Untagged", le fichier va à la racine de Organize/
-      newFilePath = path.join(TARGET_DIR, fileName);
+      newFilePath = path.join(targetRoot, fileName);
     } else {
       // Sinon, créer le dossier tag s'il n'existe pas
-      const newTagPath = path.join(TARGET_DIR, newTag);
+      const newTagPath = path.join(targetRoot, newTag);
       await fs.mkdir(newTagPath, { recursive: true });
       newFilePath = path.join(newTagPath, fileName);
     }

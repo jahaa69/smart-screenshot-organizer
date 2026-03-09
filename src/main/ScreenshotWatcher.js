@@ -1,9 +1,11 @@
-// Path to the directory screenshots default on Windows ingnore user's namme pc
-const pathImg = `${process.env.HOME || process.env.USERPROFILE}/Pictures/Screenshots`
-const fs = require('fs')
-const chokidar = require('chokidar')
+// Path to the directory screenshots (basé sur PathConfig, donc dynamique)
+const fs = require('fs');
+const chokidar = require('chokidar');
+const { getSourceDir } = require('./PathConfig');
 
-// Initialize watcher.
+let pathImg = getSourceDir();
+
+// Initialize watcher on the current screenshots directory
 const watcher = chokidar.watch(pathImg, {
   ignored: /(^|[\/\\])\../, // ignore dotfiles
   persistent: true
@@ -17,18 +19,20 @@ function getFiles() {
     
     (async () => {
       try {
-        console.log(`[getFiles] Checking directory: ${pathImg}`);
+        // Récupérer à chaque appel le dossier courant des screenshots
+        const currentDir = getSourceDir();
+        console.log(`[getFiles] Checking directory: ${currentDir}`);
         
         // Vérifier que le dossier existe
         try {
-          await fsp.access(pathImg);
+          await fsp.access(currentDir);
         } catch {
-          console.log(`[getFiles] Directory does not exist: ${pathImg}`);
+          console.log(`[getFiles] Directory does not exist: ${currentDir}`);
           resolve([]);
           return;
         }
         
-        const files = await fsp.readdir(pathImg);
+        const files = await fsp.readdir(currentDir);
         console.log(`[getFiles] All files in directory:`, files);
         
         const ORGANIZE_DIR = 'Organize';
@@ -41,7 +45,7 @@ function getFiles() {
             continue;
           }
           
-          const filePath = path.join(pathImg, file);
+          const filePath = path.join(currentDir, file);
           const stats = await fsp.stat(filePath);
           if (stats.isFile()) { // Vérifier que c'est un fichier
             console.log(`[getFiles] Found file: ${file}`);

@@ -330,29 +330,6 @@ body {
 .ctx-menu__item--danger svg { color: #f87171; }
 .ctx-menu__sep { height: 1px; background: var(--border); margin: 3px 0; }
 
-/* ── Animations ── */
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideOutDown {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-}
-
 /* ── FILE MODAL ── */
 .file-modal {
   display: flex;

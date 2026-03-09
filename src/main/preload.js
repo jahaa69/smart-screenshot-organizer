@@ -4,13 +4,14 @@ const { contextBridge, ipcRenderer } = require('electron')
 contextBridge.exposeInMainWorld('electronAPI', {
   getFiles: () => ipcRenderer.invoke('get-files'),
   getOrganizedFiles: () => ipcRenderer.invoke('get-organized-files'),
+  getOrganizedFilesFrom: (dirPath) => ipcRenderer.invoke('get-organized-files-from', dirPath),
   moveFile: (file) => ipcRenderer.invoke('move-file', file),
   setAutoOrganize: (value) => ipcRenderer.invoke('set-auto-organize', value),
   getStats: () => ipcRenderer.invoke('get-stats'),
   startWatcher: () => ipcRenderer.invoke('start-watcher'),
   updateFile: (data) => ipcRenderer.invoke('update-file', data),
-  openFile: (filePath) => ipcRenderer.invoke('open-file', filePath),
-  deleteFile: (filePath) => ipcRenderer.invoke('delete-file', filePath),
+  selectFolder: () => ipcRenderer.invoke('select-folder'),
+  setBaseDir: (dirPath) => ipcRenderer.invoke('set-base-dir', dirPath),
   onStatsUpdated: (callback) => ipcRenderer.on('stats-updated', (event, stats) => callback(stats)),
   onFileOrganized: (callback) => ipcRenderer.on('file-organized', (event, data) => callback(data))
 })

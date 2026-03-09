@@ -3,10 +3,7 @@ const path = require('path');
 const os = require('os');
 const fsSync = require('fs');
 const { getFiles } = require('./ScreenshotWatcher');
-
-// Configuration des chemins (on cible le dossier Organize créé par FileService)
-const SOURCE_DIR = path.join(os.homedir(), 'Pictures', 'Screenshots');
-const ORGANIZE_DIR = path.join(SOURCE_DIR, 'Organize');
+const { getSourceDir, getTargetDir } = require('./PathConfig');
 
 async function getFolderSizeBytes(dirPath) {
     try {
@@ -34,14 +31,15 @@ async function getFolderSizeBytes(dirPath) {
 
 async function getDiskInfo() {
     try {
-        console.log(`[getDiskInfo] Checking partition for path: ${SOURCE_DIR}`);
+        const sourceDir = getSourceDir();
+        console.log(`[getDiskInfo] Checking partition for path: ${sourceDir}`);
 
-        let checkPath = SOURCE_DIR;
+        let checkPath = sourceDir;
 
         try {
             await fs.access(checkPath);
         } catch {
-            console.log(`[getDiskInfo] SOURCE_DIR doesn't exist, using home directory`);
+            console.log(`[getDiskInfo] sourceDir doesn't exist, using home directory`);
             checkPath = os.homedir();
         }
 
@@ -100,6 +98,8 @@ async function getStats() {
         let nextFile = "Aucun";
         let folderSizeBytes = 0;
         
+        const ORGANIZE_DIR = getTargetDir();
+
         // 1. Essayer de lire le contenu du dossier organisé
         try {
             await fs.access(ORGANIZE_DIR);
